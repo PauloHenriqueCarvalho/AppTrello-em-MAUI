@@ -22,21 +22,33 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// 3. Aplica migrações automaticamente ao iniciar (Ideal para subir no Render)
-// 3. Aplica migrações com tratamento de erro
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    // Isso aplica automaticamente as migrações pendentes no banco de dados
+    dbContext.Database.Migrate();
+}
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     try
     {
-        Console.WriteLine("Tentando aplicar migrações...");
+        Console.WriteLine("DEBUG: Iniciando verificação de banco...");
+
+        // Verifica se o banco consegue ser aberto
+        var canConnect = await db.Database.CanConnectAsync();
+        Console.WriteLine($"DEBUG: Conexão bem sucedida: {canConnect}");
+
+        // Força a aplicação das migrações
+        Console.WriteLine("DEBUG: Tentando rodar Migrate()...");
         db.Database.Migrate();
-        Console.WriteLine("Migrações aplicadas com sucesso!");
+        Console.WriteLine("DEBUG: Migrações aplicadas com sucesso!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"ERRO CRÍTICO AO CONECTAR NO BANCO: {ex.Message}");
-        // Opcional: throw; // Descomente se quiser que a API pare de subir caso o banco não conecte
+        Console.WriteLine($"ERRO CRÍTICO NO BANCO: {ex.Message}");
+        Console.WriteLine($"STACK TRACE: {ex.StackTrace}");
     }
 }
 
