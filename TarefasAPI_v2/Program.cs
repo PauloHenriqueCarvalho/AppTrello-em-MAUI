@@ -24,10 +24,21 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // 3. Aplica migrações automaticamente ao iniciar (Ideal para subir no Render)
+// 3. Aplica migrações com tratamento de erro
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+    try
+    {
+        Console.WriteLine("Tentando aplicar migrações...");
+        db.Database.Migrate();
+        Console.WriteLine("Migrações aplicadas com sucesso!");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"ERRO CRÍTICO AO CONECTAR NO BANCO: {ex.Message}");
+        // Opcional: throw; // Descomente se quiser que a API pare de subir caso o banco não conecte
+    }
 }
 
 // 4. Swagger sempre disponível para testes
