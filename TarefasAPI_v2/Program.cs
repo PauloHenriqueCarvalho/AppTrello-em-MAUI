@@ -5,10 +5,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
+// Debug Prova Real: Imprime a string (com a senha mascarada)
+if (!string.IsNullOrEmpty(connectionString))
+{
+    var hiddenString = connectionString.Replace(connectionString.Split(';').FirstOrDefault(x => x.StartsWith("Password", StringComparison.OrdinalIgnoreCase)) ?? "Password=X", "Password=******");
+    Console.WriteLine($"DEBUG - Conexão lida: {hiddenString}");
+}
+else
+{
+    Console.WriteLine("DEBUG - A variável DB_CONNECTION_STRING está VAZIA!");
+}
+
 if (string.IsNullOrEmpty(connectionString))
 {
-    // Isso vai fazer o log do Render gritar exatamente o que está faltando
-    throw new Exception("ERRO FATAL: A VARIÁVEL 'DB_CONNECTION_STRING' NÃO FOI ENCONTRADA!");
+    throw new Exception("ERRO FATAL: Variável não encontrada.");
 }
 
 builder.Services.AddDbContext<AppDbContext>(o =>
