@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TarefasMaui.View.Boards"
+             Title="Boards"
+             BackgroundColor="#F5F6FA">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <VerticalStackLayout Grid.Row="0" Padding="20,20,20,10">
+            <Label Text="Bem-vindo," FontSize="14" TextColor="Gray"/>
+            <Label Text="Escolha um Board" FontSize="22" FontAttributes="Bold" TextColor="#2D2D2D"/>
+
+            <Border StrokeShape="RoundRectangle 15" StrokeThickness="2" StrokeDashArray="2,2"
+                    Stroke="#BDBDBD" BackgroundColor="Transparent" HeightRequest="60" Margin="0,15,0,5">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnNovoBoard" />
+                </Border.GestureRecognizers>
+                <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                    <Label Text="+" FontSize="24" TextColor="Gray" VerticalOptions="Center"/>
+                    <Label Text="Novo Board" FontSize="16" TextColor="Gray" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="1" 
+                        ItemsSource="{Binding BoardsList}" 
+                        Margin="15,0">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" 
+                                 HorizontalItemSpacing="12" VerticalItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border StrokeShape="RoundRectangle 15"
+                            StrokeThickness="0"
+                            BackgroundColor="White"
+                            HeightRequest="150">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.1" />
+                        </Border.Shadow>
+
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBoardSelecionado" CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+
+                        <Grid Padding="15" RowDefinitions="Auto, *, Auto">
+                            <Border Grid.Row="0" HorizontalOptions="Start" HeightRequest="35" WidthRequest="35" 
+                                    StrokeShape="RoundRectangle 10" BackgroundColor="#E3F2FD">
+                                <Label Text="B" VerticalOptions="Center" HorizontalOptions="Center" 
+                                       TextColor="#1976D2" FontAttributes="Bold"/>
+                            </Border>
+
+                            <Label Grid.Row="1" Text="{Binding Nome}" TextColor="Black" FontSize="16" FontAttributes="Bold" 
+                                   VerticalOptions="Center" MaxLines="2" LineBreakMode="TailTruncation">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnEditarNome" CommandParameter="{Binding .}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+
+                            <HorizontalStackLayout Spacing="20"  Grid.Row="2">
+                                <Label Text="Ver tarefas" 
+                                       FontSize="12" TextColor="#1976D2" />
+                                <Label Text="Excluir" 
+                                     FontSize="12" TextColor="Red">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnExcluir" CommandParameter="{Binding .}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </HorizontalStackLayout>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.Footer>
+                <BoxView HeightRequest="20" Color="Transparent" />
+            </CollectionView.Footer>
+        </CollectionView>
+    </Grid>
+</ContentPage>

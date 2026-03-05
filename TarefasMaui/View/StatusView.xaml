@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TarefasMaui.View.StatusView"
+             Title="StatusView">
+    <Grid Padding="30" RowSpacing="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <HorizontalStackLayout Grid.Row="0" Spacing="50">
+            <Label Text="Status" FontSize="30"/>
+            <Entry Placeholder="Buscar" x:Name="txtBusca" WidthRequest="400"/>
+            <Button Text="Buscar" WidthRequest="100" Clicked="OnBuscar"/>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout Grid.Row="1" Spacing="60">
+            <VerticalStackLayout Spacing="50">
+                <Label>Adicionar Status</Label>
+                <Entry Placeholder="Nome" WidthRequest="300" x:Name="txtNome"/>
+                <Entry Placeholder="Cor (#FFF)" WidthRequest="300" x:Name="txtCor" MaxLength="7" Keyboard="Plain"/>
+                <Button Text="Adicionar" WidthRequest="300" Clicked="OnAdicionar"/>
+            </VerticalStackLayout>
+            <VerticalStackLayout Spacing="20">
+                <Label Text="Status Disponiveis:" FontSize="20"/>
+                <CollectionView  ItemsSource="{Binding listaStatus}" Margin="10" >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border StrokeShape="RoundRectangle 8"
+                       StrokeThickness="0"
+                       BackgroundColor="{Binding Cor}"
+                       Margin="0,0,0,10">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnExcluirStatusTapped" />
+                                </Border.GestureRecognizers>
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="2,2" Radius="5" Opacity="0.1" />
+                                </Border.Shadow>
+
+                                <Grid ColumnDefinitions="8, *">
+                                    <BoxView Grid.Column="0" 
+                                        BackgroundColor="{Binding Cor}" 
+                                        WidthRequest="8" />
+
+                                    <StackLayout Grid.Column="1" Padding="15">
+                                        <Label Text="{Binding Nome}" 
+                                          FontAttributes="Bold" 
+                                          FontSize="18" 
+                                          TextColor="White" />
+
+                                    </StackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </HorizontalStackLayout>
+    </Grid>
+</ContentPage>

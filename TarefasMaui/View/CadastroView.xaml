@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TarefasMaui.View.CadastroView"
+             Title="CadastroView">
+    <Grid Padding="30" RowSpacing="50">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label 
+            Grid.Row="0"
+            Text="Cadastro de Usuario" FontSize="30" HorizontalOptions="Center" />
+        <VerticalStackLayout Spacing="20" Grid.Row="1">
+            <Entry Placeholder="Nome" x:Name="txtNome" WidthRequest="300"/>
+            <Entry Placeholder="Login" x:Name="txtLogin"  WidthRequest="300"/>
+            <Entry Placeholder="Senha" x:Name="txtSenha" IsPassword="True"  WidthRequest="300"/>
+        </VerticalStackLayout>
+        <Button Grid.Row="2" Clicked="OnCriar" Text="Cadastrar"  WidthRequest="300"/>
+    </Grid>
+</ContentPage>

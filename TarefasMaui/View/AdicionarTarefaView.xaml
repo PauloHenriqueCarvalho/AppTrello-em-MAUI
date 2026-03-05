@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TarefasMaui.View.AdicionarTarefaView"
+             Title="Nova Tarefa">
+
+    <ScrollView>
+        <Grid Padding="30" RowSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Text="Nova Tarefa" FontSize="30" HorizontalOptions="Center" />
+
+            <VerticalStackLayout Spacing="10" Grid.Row="1" WidthRequest="300" HorizontalOptions="Center">
+                <Entry Placeholder="Titulo" x:Name="txtTitulo" />
+
+                <Entry Placeholder="Descricao" x:Name="txtDescricao" />
+
+                <Label Text="Selecione a Data de vencimento:" />
+                <DatePicker x:Name="datePicker" />
+
+                <Label Text="Selecione a Hora:" />
+                <TimePicker x:Name="timePicker" />
+
+                <Label Text="Status:" FontSize="12" Margin="0,10,0,0"/>
+                <Picker x:Name="pckStatus" Title="Selecione a coluna" ItemDisplayBinding="{Binding Nome}" />
+
+                <Label Text="Destinatário:" FontSize="12" Margin="0,10,0,0"/>
+                <Picker x:Name="pckUsuario" Title="Selecione o Usuário" ItemDisplayBinding="{Binding Nome}" />
+            </VerticalStackLayout>
+
+            <Button Grid.Row="2" x:Name="btnCadastrar" Clicked="OnCriar" Text="Cadastrar" WidthRequest="300" VerticalOptions="End"/>
+        </Grid>
+    </ScrollView>
+</ContentPage>

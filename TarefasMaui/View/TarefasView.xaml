@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TarefasMaui.View.TarefasView"
+             Title="{Binding nomeQuedro}">
+
+    <Grid Padding="20" RowSpacing="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <HorizontalStackLayout Grid.Row="0" Spacing="20" VerticalOptions="Center">
+            <Label Text="Tarefas" FontSize="28" FontAttributes="Bold" VerticalOptions="Center"/>
+            <Entry Placeholder="Buscar tarefa por titulo ou nome do usuario..." x:Name="txtBusca" WidthRequest="300" VerticalOptions="Center"/>
+            <Button Text="Buscar" Clicked="OnBuscar" WidthRequest="100" CornerRadius="10"/>
+            <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                <CheckBox x:Name="chkArquivadas" 
+                  CheckedChanged="OnFiltroArquivadas" 
+                  Color="#2196F3" />
+                <Label Text="Ver arquivadas" 
+               VerticalOptions="Center" 
+               FontSize="14" 
+               TextColor="Gray"/>
+            </HorizontalStackLayout>
+            <Button Text="Sair para sempre do Quadro" IsVisible="False" x:Name="btnSair" Clicked="OnSairQuadro"/>
+
+        </HorizontalStackLayout>
+
+        <ScrollView Orientation="Horizontal" Grid.Row="1" HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout BindableLayout.ItemsSource="{Binding ColunasStatus}" Spacing="15" Padding="10">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border WidthRequest="320" 
+                                StrokeShape="RoundRectangle 15" 
+                                StrokeThickness="0" 
+                                BackgroundColor="#F4F5F7"
+                                Padding="10">
+
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="*, Auto" Padding="5" BackgroundColor="Transparent">
+                                    <Grid.GestureRecognizers>
+                                        <DragGestureRecognizer CanDrag="True" DragStarting="OnColunaDragStarting" />
+                                        <DropGestureRecognizer AllowDrop="True" Drop="OnColunaDrop" />
+                                    </Grid.GestureRecognizers>
+
+                                    <HorizontalStackLayout Spacing="10">
+                                        <Label Text="⠿" FontSize="22" TextColor="Gray" VerticalOptions="Center"/>
+                                        <Label Text="{Binding Coluna.Nome}" FontSize="18" FontAttributes="Bold" VerticalOptions="Center"/>
+                                        <Label Text="Excluir" FontSize="12" TextColor="Red" VerticalOptions="Center">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnExluirColuna" CommandParameter="{Binding Coluna}"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                    </HorizontalStackLayout>
+
+                                    <BoxView Grid.Column="1" WidthRequest="40" HeightRequest="4" 
+                                             BackgroundColor="{Binding Coluna.Cor}" VerticalOptions="Center" CornerRadius="2"/>
+                                </Grid>
+
+                                <CollectionView ItemsSource="{Binding Tarefas}" SelectionMode="None">
+                                    <CollectionView.ItemsLayout>
+                                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+                                    </CollectionView.ItemsLayout>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BackgroundColor="White" StrokeShape="RoundRectangle 8" StrokeThickness="0.5" Stroke="#D1D1D1" Padding="0">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="OnMoverTarefaTapped" CommandParameter="{Binding .}" />
+                                                </Border.GestureRecognizers>
+                                                <Grid ColumnDefinitions="6, *">
+                                                    <BoxView Grid.Column="0" BackgroundColor="{Binding Coluna.Cor}" VerticalOptions="Fill" />
+                                                    <StackLayout Grid.Column="1" Padding="12" Spacing="4">
+                                                        <Label Text="{Binding Titulo}" FontAttributes="Bold" FontSize="15" />
+                                                        <Label Text="{Binding Descricao}" FontSize="12" TextColor="#666" MaxLines="2" />
+                                                        <HorizontalStackLayout Spacing="8" Margin="0,4,0,0">
+                                                            <Label Text="{Binding DataVencimento, StringFormat='{0:dd/MM HH:mm}'}" FontSize="11" TextColor="#888" />
+                                                            <Label Text="•" TextColor="#CCC" VerticalOptions="Center"/>
+                                                            <Label Text="{Binding Usuarios[0].Nome}" FontSize="11" TextColor="#888" FontAttributes="Italic" />
+                                                        </HorizontalStackLayout>
+                                                    </StackLayout>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*" ColumnSpacing="15" Padding="0,10">
+            <Button Grid.Column="0" Text="+ Tarefa" Clicked="OnCriarTarefa" BackgroundColor="#2196F3" TextColor="White" CornerRadius="12"/>
+            <Button Grid.Column="1" Text="+ Status" Clicked="OnStatus" BackgroundColor="#607D8B" TextColor="White" CornerRadius="12"/>
+            <Button Grid.Column="2" Text="+ Usuários" Clicked="OnAddUser" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="12"/>
+            <Button Grid.Column="3" Text="- Usuários" Clicked="OnRemoveUser" BackgroundColor="Red" TextColor="White" CornerRadius="12"/>
+        </Grid>
+
+
+
+    </Grid>
+</ContentPage>
