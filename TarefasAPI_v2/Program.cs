@@ -6,12 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. Configuração de Banco: Prioriza Variável de Ambiente (Render), se não acha no appsettings.json
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
                        ?? builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine($"DEBUG: A string de conexão sendo usada é: {connectionString}");
 
-builder.Services.AddDbContext<AppDbContext>(o =>
-{
-    o.UseSqlServer(connectionString);
-});
-
+builder.Services.AddDbContext<AppDbContext>(o => { o.UseSqlServer(connectionString); });
 // 2. Unificado a configuração de Controllers e JSON
 builder.Services.AddControllers().AddJsonOptions(o =>
 {
