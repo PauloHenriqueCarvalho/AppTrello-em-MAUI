@@ -3,23 +3,9 @@ using TarefasAPI_v2.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+var connectionString = "Server=tarefas_db.mssql.somee.com;Database=tarefas_db;User Id=paulohenrique7_SQLLogin_1;Password=33uh5jyazi;TrustServerCertificate=True;Encrypt=False;Connect Timeout=60;";
 
-// Debug Prova Real: Imprime a string (com a senha mascarada)
-if (!string.IsNullOrEmpty(connectionString))
-{
-    var hiddenString = connectionString.Replace(connectionString.Split(';').FirstOrDefault(x => x.StartsWith("Password", StringComparison.OrdinalIgnoreCase)) ?? "Password=X", "Password=******");
-    Console.WriteLine($"DEBUG - Conexão lida: {hiddenString}");
-}
-else
-{
-    Console.WriteLine("DEBUG - A variável DB_CONNECTION_STRING está VAZIA!");
-}
-
-if (string.IsNullOrEmpty(connectionString))
-{
-    throw new Exception("ERRO FATAL: Variável não encontrada.");
-}
+Console.WriteLine($"DEBUG: Usando string forçada: {connectionString}");
 
 builder.Services.AddDbContext<AppDbContext>(o =>
 {
