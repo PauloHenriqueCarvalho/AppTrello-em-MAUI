@@ -18,7 +18,7 @@ namespace TarefasMaui.Services
         public PadraoService()
         {
             c = new HttpClient();
-            c.BaseAddress = new Uri("http://10.80.20.140:5215/api/");
+            c.BaseAddress = new Uri("https://apptrello-em-maui.onrender.com/api/");
             c.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
         public class LoginDTO

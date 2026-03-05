@@ -4,80 +4,155 @@
              x:Class="TarefasMaui.View.TarefasView"
              Title="{Binding nomeQuedro}">
 
-    <Grid Padding="20" RowSpacing="15">
+    <Grid Padding="12" RowSpacing="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <HorizontalStackLayout Grid.Row="0" Spacing="20" VerticalOptions="Center">
-            <Label Text="Tarefas" FontSize="28" FontAttributes="Bold" VerticalOptions="Center"/>
-            <Entry Placeholder="Buscar tarefa por titulo ou nome do usuario..." x:Name="txtBusca" WidthRequest="300" VerticalOptions="Center"/>
-            <Button Text="Buscar" Clicked="OnBuscar" WidthRequest="100" CornerRadius="10"/>
-            <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
-                <CheckBox x:Name="chkArquivadas" 
-                  CheckedChanged="OnFiltroArquivadas" 
-                  Color="#2196F3" />
-                <Label Text="Ver arquivadas" 
-               VerticalOptions="Center" 
-               FontSize="14" 
-               TextColor="Gray"/>
+        <!-- Row 0: Título + Checkbox arquivadas + Botão Sair -->
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10" VerticalOptions="Center">
+            <Label Grid.Column="0"
+                   Text="Tarefas"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center"/>
+
+            <HorizontalStackLayout Grid.Column="1" Spacing="5" VerticalOptions="Center">
+                <CheckBox x:Name="chkArquivadas"
+                          CheckedChanged="OnFiltroArquivadas"
+                          Color="#2196F3" />
+                <Label Text="Arquivadas"
+                       VerticalOptions="Center"
+                       FontSize="13"
+                       TextColor="Gray"/>
             </HorizontalStackLayout>
-            <Button Text="Sair para sempre do Quadro" IsVisible="False" x:Name="btnSair" Clicked="OnSairQuadro"/>
 
-        </HorizontalStackLayout>
+            <Button Grid.Column="2"
+                    Text="Sair"
+                    IsVisible="False"
+                    x:Name="btnSair"
+                    Clicked="OnSairQuadro"
+                    BackgroundColor="#FF5252"
+                    TextColor="White"
+                    FontSize="12"
+                    Padding="8,4"
+                    CornerRadius="8"/>
+        </Grid>
 
-        <ScrollView Orientation="Horizontal" Grid.Row="1" HorizontalScrollBarVisibility="Never">
-            <HorizontalStackLayout BindableLayout.ItemsSource="{Binding ColunasStatus}" Spacing="15" Padding="10">
+        <!-- Row 1: Barra de busca -->
+        <Grid Grid.Row="1" ColumnDefinitions="*, Auto" ColumnSpacing="8">
+            <Entry Grid.Column="0"
+                   Placeholder="Buscar por título ou usuário..."
+                   x:Name="txtBusca"
+                   VerticalOptions="Center"
+                   ClearButtonVisibility="WhileEditing"/>
+            <Button Grid.Column="1"
+                    Text="🔍"
+                    Clicked="OnBuscar"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    Padding="0"
+                    CornerRadius="10"
+                    BackgroundColor="#2196F3"
+                    TextColor="White"/>
+        </Grid>
+
+        <!-- Row 2: Colunas Kanban com scroll horizontal -->
+        <ScrollView Orientation="Horizontal"
+                    Grid.Row="2"
+                    HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout BindableLayout.ItemsSource="{Binding ColunasStatus}"
+                                   Spacing="12"
+                                   Padding="4,0">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <Border WidthRequest="320" 
-                                StrokeShape="RoundRectangle 15" 
-                                StrokeThickness="0" 
+                        <Border WidthRequest="275"
+                                StrokeShape="RoundRectangle 14"
+                                StrokeThickness="0"
                                 BackgroundColor="#F4F5F7"
                                 Padding="10">
 
-                            <VerticalStackLayout Spacing="10">
-                                <Grid ColumnDefinitions="*, Auto" Padding="5" BackgroundColor="Transparent">
+                            <VerticalStackLayout Spacing="8">
+                                <!-- Cabeçalho da coluna com drag -->
+                                <Grid ColumnDefinitions="*, Auto"
+                                      Padding="4,2"
+                                      BackgroundColor="Transparent">
                                     <Grid.GestureRecognizers>
                                         <DragGestureRecognizer CanDrag="True" DragStarting="OnColunaDragStarting" />
                                         <DropGestureRecognizer AllowDrop="True" Drop="OnColunaDrop" />
                                     </Grid.GestureRecognizers>
 
-                                    <HorizontalStackLayout Spacing="10">
-                                        <Label Text="⠿" FontSize="22" TextColor="Gray" VerticalOptions="Center"/>
-                                        <Label Text="{Binding Coluna.Nome}" FontSize="18" FontAttributes="Bold" VerticalOptions="Center"/>
-                                        <Label Text="Excluir" FontSize="12" TextColor="Red" VerticalOptions="Center">
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="⠿" FontSize="20" TextColor="Gray" VerticalOptions="Center"/>
+                                        <Label Text="{Binding Coluna.Nome}"
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center"/>
+                                        <Label Text="✕"
+                                               FontSize="12"
+                                               TextColor="Red"
+                                               VerticalOptions="Center"
+                                               Padding="4,0">
                                             <Label.GestureRecognizers>
-                                                <TapGestureRecognizer Tapped="OnExluirColuna" CommandParameter="{Binding Coluna}"/>
+                                                <TapGestureRecognizer Tapped="OnExluirColuna"
+                                                                      CommandParameter="{Binding Coluna}"/>
                                             </Label.GestureRecognizers>
                                         </Label>
                                     </HorizontalStackLayout>
 
-                                    <BoxView Grid.Column="1" WidthRequest="40" HeightRequest="4" 
-                                             BackgroundColor="{Binding Coluna.Cor}" VerticalOptions="Center" CornerRadius="2"/>
+                                    <BoxView Grid.Column="1"
+                                             WidthRequest="32"
+                                             HeightRequest="4"
+                                             BackgroundColor="{Binding Coluna.Cor}"
+                                             VerticalOptions="Center"
+                                             CornerRadius="2"/>
                                 </Grid>
 
+                                <!-- Lista de tarefas -->
                                 <CollectionView ItemsSource="{Binding Tarefas}" SelectionMode="None">
                                     <CollectionView.ItemsLayout>
-                                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+                                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="8"/>
                                     </CollectionView.ItemsLayout>
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BackgroundColor="White" StrokeShape="RoundRectangle 8" StrokeThickness="0.5" Stroke="#D1D1D1" Padding="0">
+                                            <Border BackgroundColor="White"
+                                                    StrokeShape="RoundRectangle 8"
+                                                    StrokeThickness="0.5"
+                                                    Stroke="#D1D1D1"
+                                                    Padding="0">
                                                 <Border.GestureRecognizers>
-                                                    <TapGestureRecognizer Tapped="OnMoverTarefaTapped" CommandParameter="{Binding .}" />
+                                                    <TapGestureRecognizer Tapped="OnMoverTarefaTapped"
+                                                                          CommandParameter="{Binding .}" />
                                                 </Border.GestureRecognizers>
-                                                <Grid ColumnDefinitions="6, *">
-                                                    <BoxView Grid.Column="0" BackgroundColor="{Binding Coluna.Cor}" VerticalOptions="Fill" />
-                                                    <StackLayout Grid.Column="1" Padding="12" Spacing="4">
-                                                        <Label Text="{Binding Titulo}" FontAttributes="Bold" FontSize="15" />
-                                                        <Label Text="{Binding Descricao}" FontSize="12" TextColor="#666" MaxLines="2" />
-                                                        <HorizontalStackLayout Spacing="8" Margin="0,4,0,0">
-                                                            <Label Text="{Binding DataVencimento, StringFormat='{0:dd/MM HH:mm}'}" FontSize="11" TextColor="#888" />
+                                                <Grid ColumnDefinitions="5, *">
+                                                    <BoxView Grid.Column="0"
+                                                             BackgroundColor="{Binding Coluna.Cor}"
+                                                             VerticalOptions="Fill" />
+                                                    <StackLayout Grid.Column="1"
+                                                                 Padding="10,8"
+                                                                 Spacing="3">
+                                                        <Label Text="{Binding Titulo}"
+                                                               FontAttributes="Bold"
+                                                               FontSize="14"
+                                                               LineBreakMode="TailTruncation"/>
+                                                        <Label Text="{Binding Descricao}"
+                                                               FontSize="12"
+                                                               TextColor="#666"
+                                                               MaxLines="2"
+                                                               LineBreakMode="TailTruncation"/>
+                                                        <HorizontalStackLayout Spacing="6" Margin="0,2,0,0">
+                                                            <Label Text="{Binding DataVencimento, StringFormat='{0:dd/MM HH:mm}'}"
+                                                                   FontSize="11"
+                                                                   TextColor="#888" />
                                                             <Label Text="•" TextColor="#CCC" VerticalOptions="Center"/>
-                                                            <Label Text="{Binding Usuarios[0].Nome}" FontSize="11" TextColor="#888" FontAttributes="Italic" />
+                                                            <Label Text="{Binding Usuarios[0].Nome}"
+                                                                   FontSize="11"
+                                                                   TextColor="#888"
+                                                                   FontAttributes="Italic"
+                                                                   LineBreakMode="TailTruncation"/>
                                                         </HorizontalStackLayout>
                                                     </StackLayout>
                                                 </Grid>
@@ -85,6 +160,7 @@
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
+
                             </VerticalStackLayout>
                         </Border>
                     </DataTemplate>
@@ -92,14 +168,37 @@
             </HorizontalStackLayout>
         </ScrollView>
 
-        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*" ColumnSpacing="15" Padding="0,10">
-            <Button Grid.Column="0" Text="+ Tarefa" Clicked="OnCriarTarefa" BackgroundColor="#2196F3" TextColor="White" CornerRadius="12"/>
-            <Button Grid.Column="1" Text="+ Status" Clicked="OnStatus" BackgroundColor="#607D8B" TextColor="White" CornerRadius="12"/>
-            <Button Grid.Column="2" Text="+ Usuários" Clicked="OnAddUser" BackgroundColor="#4CAF50" TextColor="White" CornerRadius="12"/>
-            <Button Grid.Column="3" Text="- Usuários" Clicked="OnRemoveUser" BackgroundColor="Red" TextColor="White" CornerRadius="12"/>
+        <!-- Row 3: Botões de ação (2x2 em mobile) -->
+        <Grid Grid.Row="3" RowDefinitions="Auto,Auto" ColumnDefinitions="*,*" RowSpacing="8" ColumnSpacing="8" Padding="0,6,0,0">
+            <Button Grid.Row="0" Grid.Column="0"
+                    Text="+ Tarefa"
+                    Clicked="OnCriarTarefa"
+                    BackgroundColor="#2196F3"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="44"/>
+            <Button Grid.Row="0" Grid.Column="1"
+                    Text="+ Status"
+                    Clicked="OnStatus"
+                    BackgroundColor="#607D8B"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="44"/>
+            <Button Grid.Row="1" Grid.Column="0"
+                    Text="+ Usuário"
+                    Clicked="OnAddUser"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="44"/>
+            <Button Grid.Row="1" Grid.Column="1"
+                    Text="- Usuário"
+                    Clicked="OnRemoveUser"
+                    BackgroundColor="#F44336"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="44"/>
         </Grid>
-
-
 
     </Grid>
 </ContentPage>

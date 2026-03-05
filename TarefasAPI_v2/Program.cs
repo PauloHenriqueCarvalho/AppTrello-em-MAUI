@@ -3,12 +3,13 @@ using TarefasAPI_v2.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
-Console.WriteLine($"DEBUG: Usando string forçada: {connectionString}");
+//var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+
+var connectingString = "Server=localhost;Database=TarefasDB_v2;User id=sa;Password=1234;TrustServerCertificate=True";
 
 builder.Services.AddDbContext<AppDbContext>(o =>
 {
-    o.UseSqlServer(connectionString);
+    o.UseSqlServer(connectingString);
 });
 // 2. Unificado a configuração de Controllers e JSON
 builder.Services.AddControllers().AddJsonOptions(o =>
