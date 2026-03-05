@@ -3,12 +3,18 @@ using TarefasAPI_v2.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Configuração de Banco: Prioriza Variável de Ambiente (Render), se não acha no appsettings.json
-var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
-                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
-Console.WriteLine($"DEBUG: A string de conexão sendo usada é: {connectionString}");
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
-builder.Services.AddDbContext<AppDbContext>(o => { o.UseSqlServer(connectionString); });
+if (string.IsNullOrEmpty(connectionString))
+{
+    // Isso vai fazer o log do Render gritar exatamente o que está faltando
+    throw new Exception("ERRO FATAL: A VARIÁVEL 'DB_CONNECTION_STRING' NÃO FOI ENCONTRADA!");
+}
+
+builder.Services.AddDbContext<AppDbContext>(o =>
+{
+    o.UseSqlServer(connectionString);
+});
 // 2. Unificado a configuração de Controllers e JSON
 builder.Services.AddControllers().AddJsonOptions(o =>
 {
