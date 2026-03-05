@@ -3,8 +3,7 @@ using TarefasAPI_v2.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = "Server=tarefas_db.mssql.somee.com;Database=tarefas_db;User Id=paulohenrique7_SQLLogin_1;Password=33uh5jyazi;TrustServerCertificate=True;Encrypt=False;Connect Timeout=60;";
-
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 Console.WriteLine($"DEBUG: Usando string forçada: {connectionString}");
 
 builder.Services.AddDbContext<AppDbContext>(o =>
@@ -26,7 +25,23 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     // Isso aplica automaticamente as migrações pendentes no banco de dados
-    dbContext.Database.Migrate();
+    // Use isso para forçar a criação da estrutura baseada nos seus modelos
+    Console.WriteLine("DEBUG: Forçando criação de tabelas (EnsureCreated)...");
+    try
+    {
+        if (dbContext.Database.EnsureCreated())
+        {
+            Console.WriteLine("DEBUG: Banco e tabelas criados com sucesso!");
+        }
+        else
+        {
+            Console.WriteLine("DEBUG: O banco já existia. Verificando integridade...");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"ERRO AO TENTAR CRIAR O BANCO: {ex.Message}");
+    }
 }
 
 using (var scope = app.Services.CreateScope())
